@@ -11,5 +11,5 @@ function run_tests {
     # Runs tests on installed distribution from an empty directory
     pip install pytest
     python --version
-    py.test --pyargs kiwisolver
+    py.test ../kiwi
 }

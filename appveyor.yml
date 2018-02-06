@@ -47,7 +47,7 @@ test_script:
   - mkdir for_testing
   - cd for_testing
   - python --version
-  - py.test --pyargs kiwisolver
+  - py.test ..\kiwi
   - cd ..
 
 artifacts:
