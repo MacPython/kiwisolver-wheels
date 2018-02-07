@@ -1,7 +1,7 @@
 env:
   global:
+      - BUILD_COMMIT=4c4405e2f8909162fce1be74243c7bd94adda54b
       - REPO_DIR=kiwi
-      - BUILD_COMMIT=1.0.1
       - PLAT=x86_64
       - UNICODE_WIDTH=32
       - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
