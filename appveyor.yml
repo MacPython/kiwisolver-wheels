@@ -17,6 +17,8 @@ environment:
     - PYTHON: C:\Python35-x64
     - PYTHON: C:\Python36
     - PYTHON: C:\Python36-x64
+    - PYTHON: C:\Python37
+    - PYTHON: C:\Python37-x64
 
 install:
   # Prepend newly installed Python to the PATH of this build (this cannot be
@@ -59,7 +61,7 @@ on_success:
   # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
   # disable the ssl checks.
   - pip install wheelhouse-uploader
-  - python -m wheelhouse_uploader upload --no-update-index --no-ssl-check --local-folder=kiwi\dist wheels
+  - python -m wheelhouse_uploader upload --no-update-index --local-folder=kiwi\dist wheels
 
 cache:
   # Use the appveyor cache to avoid re-downloading large archives such
