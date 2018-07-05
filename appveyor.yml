@@ -17,8 +17,14 @@ environment:
     - PYTHON: C:\Python35-x64
     - PYTHON: C:\Python36
     - PYTHON: C:\Python36-x64
+    - PYTHON: C:\Python37
+    - PYTHON: C:\Python37-x64
 
 install:
+  - git submodule update --init
+  # Install new Python if necessary
+  - ps: .\multibuild\install_python.ps1
+
   # Prepend newly installed Python to the PATH of this build (this cannot be
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
@@ -33,7 +39,6 @@ install:
   - pip install wheel==0.26
   # Build wheel
   - cd kiwi
-  - git submodule update --init
   - git checkout %BUILD_COMMIT%
   - python setup.py bdist_wheel
   - cd ..
@@ -59,7 +64,7 @@ on_success:
   # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
   # disable the ssl checks.
   - pip install wheelhouse-uploader
-  - python -m wheelhouse_uploader upload --no-update-index --no-ssl-check --local-folder=kiwi\dist wheels
+  - python -m wheelhouse_uploader upload --no-update-index --local-folder=kiwi\dist wheels
 
 cache:
   # Use the appveyor cache to avoid re-downloading large archives such
