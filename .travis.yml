@@ -82,10 +82,6 @@ matrix:
     - os: osx
       language: generic
       env:
-        - MB_PYTHON_VERSION=3.4
-    - os: osx
-      language: generic
-      env:
         - MB_PYTHON_VERSION=3.5
     - os: osx
       language: generic
@@ -99,6 +95,7 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.8
+        - MB_PYTHON_OSX_VER=10.9
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
