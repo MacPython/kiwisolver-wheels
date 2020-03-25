@@ -3,7 +3,7 @@
 
 environment:
   global:
-    BUILD_COMMIT: a9abba5c7a9af57a395b975135345ff73b26dac0
+    BUILD_COMMIT: e11093a51bf0200ed73db57e56656058937b8e8f
     WHEELHOUSE_UPLOADER_USERNAME: travis-worker
     WHEELHOUSE_UPLOADER_SECRET:
       secure: 9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
