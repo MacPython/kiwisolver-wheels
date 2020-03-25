@@ -3,22 +3,18 @@
 
 environment:
   global:
-    BUILD_COMMIT: 4c4405e2f8909162fce1be74243c7bd94adda54b
+    BUILD_COMMIT: a9abba5c7a9af57a395b975135345ff73b26dac0
     WHEELHOUSE_UPLOADER_USERNAME: travis-worker
     WHEELHOUSE_UPLOADER_SECRET:
       secure: 9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
 
   matrix:
-    - PYTHON: C:\Python27
-    - PYTHON: C:\Python27-x64
-    - PYTHON: C:\Python34
-    - PYTHON: C:\Python34-x64
-    - PYTHON: C:\Python35
-    - PYTHON: C:\Python35-x64
     - PYTHON: C:\Python36
     - PYTHON: C:\Python36-x64
     - PYTHON: C:\Python37
     - PYTHON: C:\Python37-x64
+    - PYTHON: C:\Python38
+    - PYTHON: C:\Python38-x64
 
 install:
   - git submodule update --init
