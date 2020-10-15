@@ -61,7 +61,7 @@ on_success:
   # KIWI_STAGING_UPLOAD_TOKEN is an encrypted variable
   # used in Appveyor CI config, originally created at
   # multibuild-wheels-staging site
-  - cd ..\kiwi
+  - cd kiwi
   - cmd: set ANACONDA_ORG="multibuild-wheels-staging"
   - pip install git+https://github.com/Anaconda-Server/anaconda-client
   - IF NOT "%KIWI_STAGING_UPLOAD_TOKEN%" == "" anaconda -t %KIWI_STAGING_UPLOAD_TOKEN% upload --force -u %ANACONDA_ORG% "dist\*.whl"
