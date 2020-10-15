@@ -4,9 +4,8 @@
 environment:
   global:
     BUILD_COMMIT: 1.2.0
-    WHEELHOUSE_UPLOADER_USERNAME: travis-worker
-    WHEELHOUSE_UPLOADER_SECRET:
-      secure: 9s0gdDGnNnTt7hvyNpn0/ZzOMGPdwPp2SewFTfGzYk7uI+rdAN9rFq2D1gAP4NQh
+    KIWI_STAGING_UPLOAD_TOKEN:
+      secure: hYPQXkQO2G7bXy9XYRlU64WjapLtv7KPYSIpt9GZX3JaS4jlfnNhkCCeGPVh8bj5
 
   matrix:
     - PYTHON: C:\Python36
@@ -15,6 +14,8 @@ environment:
     - PYTHON: C:\Python37-x64
     - PYTHON: C:\Python38
     - PYTHON: C:\Python38-x64
+    - PYTHON: C:\Python39
+    - PYTHON: C:\Python39-x64
 
 install:
   - git submodule update --init
@@ -56,11 +57,14 @@ artifacts:
   - path: kiwi\dist\*
 
 on_success:
-  # Upload the generated wheel package to Rackspace
-  # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
-  # disable the ssl checks.
-  - pip install wheelhouse-uploader
-  - python -m wheelhouse_uploader upload --no-update-index --local-folder=kiwi\dist wheels
+  # Upload the generated wheel package to anaconda.org
+  # KIWI_STAGING_UPLOAD_TOKEN is an encrypted variable
+  # used in Appveyor CI config, originally created at
+  # multibuild-wheels-staging site
+  - cd ..\kiwi
+  - cmd: set ANACONDA_ORG="multibuild-wheels-staging"
+  - pip install git+https://github.com/Anaconda-Server/anaconda-client
+  - IF NOT "%KIWI_STAGING_UPLOAD_TOKEN%" == "" anaconda -t %KIWI_STAGING_UPLOAD_TOKEN% upload --force -u %ANACONDA_ORG% "dist\*.whl"
 
 cache:
   # Use the appveyor cache to avoid re-downloading large archives such
