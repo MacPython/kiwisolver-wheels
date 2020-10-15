@@ -41,7 +41,14 @@ jobs:
       env:
         - MB_PYTHON_VERSION=3.8
         - PLAT=i686
-        - os: linux
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.9
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.9
+        - PLAT=i686
+    - os: linux
       arch: arm64
       env:
         - PLAT=aarch64
@@ -65,6 +72,14 @@ jobs:
         - MB_PYTHON_VERSION=3.8
         - DEBUG_PRINT=1
         - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
+    - os: linux
+      arch: arm64
+      env:
+        - PLAT=aarch64
+        - MB_ML_VER=2014
+        - MB_PYTHON_VERSION=3.9
+        - DEBUG_PRINT=1
+        - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
     - os: osx
       language: generic
       env:
@@ -77,6 +92,38 @@ jobs:
       language: generic
       env:
         - MB_PYTHON_VERSION=3.8
+    - os: osx
+      language: generic
+      env:
+        - MB_PYTHON_VERSION=3.9
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.6
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.6
+        - PLAT=i686
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.7
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.7
+        - PLAT=i686
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.8
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.8
+        - PLAT=i686
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.9
+    - os: windows
+      env:
+        - MB_PYTHON_VERSION=3.9
+        - PLAT=i686
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -99,9 +146,13 @@ script:
     - install_run $PLAT
 
 after_success:
-    # Upload wheels to Rackspace container
-    - pip install wheelhouse-uploader
-    - python -m wheelhouse_uploader upload --local-folder
-          ${TRAVIS_BUILD_DIR}/wheelhouse/
-          $UPLOAD_ARGS
-          $CONTAINER
+    # The tokens are set from
+    # https://anaconda.org/multibuild-wheels-staging/settings/
+    - if [ "$TRAVIS_BRANCH" != "master" ] ; then
+          ANACONDA_ORG="multibuild-wheels-staging";
+          TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
+      fi
+    - pip install git+https://github.com/Anaconda-Server/anaconda-client;
+    - if [ -n "${TOKEN}" ] ; then
+        anaconda -t ${TOKEN} upload -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
+      fi
