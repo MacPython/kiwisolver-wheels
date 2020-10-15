@@ -24,12 +24,11 @@ jobs:
         env:
           CIBW_BUILD: cp${{ matrix.python }}-*
         run: |
-          cd kiwi
-          python -m cibuildwheel --output-dir wheelhouse
+          python -m cibuildwheel kiwi --output-dir wheelhouse
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: kiwi/wheelhouse/*.whl
+          path: wheelhouse/*.whl
 
   upload_anaconda:
     name: Upload to Anaconda
