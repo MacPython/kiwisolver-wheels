@@ -31,7 +31,7 @@ jobs:
         env:
           CIBW_BUILD: cp${{ matrix.python }}-*
           CIBW_TEST_REQUIRES: pytest
-          CIBW_TEST_COMMAND: python -m pytest {package}/tests -v
+          CIBW_TEST_COMMAND: python -m pytest {package}/py/tests -v
         run: |
           python -m cibuildwheel kiwi --output-dir ~/dist
       - name: Store artifacts
