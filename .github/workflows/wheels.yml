@@ -18,6 +18,7 @@ jobs:
           BUILD_COMMIT: master
         run: |
           git submodule update --init
+          cd kiwi
           git checkout $BUILD_COMMIT
       - name: Setup Python
         uses: actions/setup-python@v2

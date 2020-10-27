@@ -1,8 +1,8 @@
 env:
   global:
       # Daily commit is used on master branch and build commit on named
-      # branches
-      - BUILD_COMMIT=1.3.0
+      # branches. To build a tag prefix the tag value by tags/
+      - BUILD_COMMIT=tags/1.3.0
       - DAILY_COMMIT=master
       - REPO_DIR=kiwi
       - PLAT=x86_64
@@ -39,6 +39,7 @@ before_install:
           BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT};
       fi
     - git submodule update --init
+    - cd kiwi
     - git checkout $BUILD_COMMIT
 
 install:
