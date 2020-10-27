@@ -33,12 +33,12 @@ jobs:
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: python -m pytest {package}/py/tests -v
         run: |
-          python -m cibuildwheel kiwi --output-dir ~/dist
+          python -m cibuildwheel kiwi --output-dir dist
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
           name: artifact
-          path: ~/dist/*.whl
+          path: dist/*.whl
 
   upload_anaconda:
     needs: [build_wheels]
