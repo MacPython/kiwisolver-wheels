@@ -33,8 +33,7 @@ jobs:
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: python -m pytest {package}/tests -v
         run: |
-          cd ..
-          python -m cibuildwheel atom --output-dir ~/dist
+          python -m cibuildwheel kiwi --output-dir ~/dist
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
