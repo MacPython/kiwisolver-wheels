@@ -6,8 +6,6 @@ jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }} for Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
-    env:
-      -
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
