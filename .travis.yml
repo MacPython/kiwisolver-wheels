@@ -2,116 +2,62 @@ env:
   global:
       # Daily commit is used on master branch and build commit on named
       # branches
-      - BUILD_COMMIT=4c4405e2f8909162fce1be74243c7bd94adda54b
+      - BUILD_COMMIT=1.3.0
       - DAILY_COMMIT=master
       - REPO_DIR=kiwi
       - PLAT=x86_64
       - UNICODE_WIDTH=32
-      - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
-      # Following generated with
-      # travis encrypt -r MacPython/kiwisolver-wheels WHEELHOUSE_UPLOADER_SECRET=<the api key>
-      - secure:
-          "t4VDvX7RkpeJB1v5sws0egX6Py9aejVSpzkaHgRkUhHZ3F3rBKfSmL6Fh6URRJCkoObMweQDKkWB6vPikGMUEWH4zy7OvT8+UEZ0GB/wY4fBga4iCzs/2NRARshEw/BoPZgGYA5zEZXIl60gIRMGNpD/JjK+qv87/eYFGeXb0Ddzj0XMn1ytY9fOUsiLw40M1F3eu29lU3ZNrLb5sES8+XJ5lRc8Z+r1ZxHecRDZ6jC5/bQC7eGvdhIaESaalxeMxnJ5piWvn3TTq8GFILKO9IHM1HPZMswIfKt8NpZYfTTDAZzrv5xVihq5opP2Vd1qWZbBOE4JASoP3amXmHia15JV9XxS+Y3o7bVY7cWmbOBr5YlWnEb0Li5gCM8uB7R1JWxvcN8Wgc2lRwq/5lNzmVGe/KxXbzAnZfxlMLqS5kInU+iQXBydH/cEU+8LCb9BVYoGvs9AaEHPCbGdrJzZkyGWhcb8+t7psXZ119kEJ9Zp953AUOBMDVcr/vpoop++EQ1WoMkgiIpX+RiI7iiavptwOARJIG2vEA2zw5TD/PHXCkg+Kr/zR2sRH9xaHpggWODJgNfBMoyx8KqNxEjicPxjNmFg0lwb4O96gpjTQp3EzSIrwpYJcXD6fGj3LjWGlJRBqGxkHOHo29asqdu9DLtEcDbKLCgXtCon4B0M7lw="
+      - CIBW_TEST_REQUIRES=pytest
+      - CIBW_TEST_COMMAND=python -m pytest {package}/tests -v
 
 language: python
 # Default Python version is usually 2.7
-python: 3.5
-sudo: required
-dist: trusty
+python: "3.8"
 services: docker
 
-matrix:
-  exclude:
-      # Exclude the default Python 3.5 build
-      - python: 3.5
+jobs:
   include:
     - os: linux
+      arch: arm64
       env:
-        - MB_PYTHON_VERSION=2.7
+        - CIBW_BUILD=3.6
     - os: linux
+      arch: arm64
       env:
-        - MB_PYTHON_VERSION=2.7
-        - UNICODE_WIDTH=16
+        - CIBW_BUILD=3.7
     - os: linux
+      arch: arm64
       env:
-        - MB_PYTHON_VERSION=2.7
-        - PLAT=i686
+        - CIBW_BUILD=3.8
     - os: linux
+      arch: arm64
       env:
-        - MB_PYTHON_VERSION=2.7
-        - PLAT=i686
-        - UNICODE_WIDTH=16
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.4
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.4
-        - PLAT=i686
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.5
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.5
-        - PLAT=i686
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-        - PLAT=i686
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.7
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.7
-        - PLAT=i686
-    - os: osx
-      language: generic
-      env: MB_PYTHON_VERSION=2.7
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.4
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.5
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.6
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.7
+        - MB_ML_VER=2014
+        - CIBW_BUILD=3.9
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
-          CONTAINER="pre-release";
           BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT};
-      else
-          CONTAINER=wheels;
-          UPLOAD_ARGS="--no-update-index";
       fi
-    - source multibuild/common_utils.sh
-    - source multibuild/travis_steps.sh
-    - before_install
+    - git submodule update --init
+    - git checkout $BUILD_COMMIT
 
 install:
-    # Maybe get and clean and patch source
-    - clean_code $REPO_DIR $BUILD_COMMIT
-    - build_wheel $REPO_DIR $PLAT
+    - python -m pip install --upgrade pip
+    - python -m pip install wheel cibuildwheel
 
 script:
-    - install_run $PLAT
+    - python -m cibuildwheel kiwi --output-dir ~/dist
 
 after_success:
-    # Upload wheels to Rackspace container
-    - pip install wheelhouse-uploader
-    - python -m wheelhouse_uploader upload --local-folder
-          ${TRAVIS_BUILD_DIR}/wheelhouse/
-          $UPLOAD_ARGS
-          $CONTAINER
+    # The tokens are set from
+    # https://anaconda.org/multibuild-wheels-staging/settings/
+    - if [ "$TRAVIS_BRANCH" != "master" ] ; then
+          ANACONDA_ORG="multibuild-wheels-staging";
+          TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
+      fi
+    - pip install git+https://github.com/Anaconda-Server/anaconda-client;
+    - which python
+    - if [ -n "${TOKEN}" ] ; then
+        anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
+      fi

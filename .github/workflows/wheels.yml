@@ -1,0 +1,67 @@
+name: Build and upload wheels
+on: [push, pull-request]
+
+jobs:
+
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }} for Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    env:
+      -
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        python: [36, 37, 38, 39]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Update repo
+        env:
+          BUILD_COMMIT=master
+        run: |
+          git submodule update --init
+          git checkout $BUILD_COMMIT
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install cibuildwheel
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install wheel cibuildwheel
+      - name: Build wheels
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-*
+          CIBW_TEST_REQUIRES: pytest
+          CIBW_TEST_COMMAND: python -m pytest {package}/tests -v
+        run: |
+          cd ..
+          python -m cibuildwheel atom --output-dir ~/dist
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: ~/dist/*.whl
+
+  upload_anaconda:
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Anaconda upload
+        run: |
+          if [ "${{ github.ref }" != "refs/heads/master" ] ; then
+            ANACONDA_ORG="multibuild-wheels-staging";
+            TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
+          fi
+          pip install git+https://github.com/Anaconda-Server/anaconda-client;
+          if [ -n "${TOKEN}" ] ; then
+            anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
+          fi
