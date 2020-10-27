@@ -32,7 +32,6 @@ jobs:
     - os: linux
       arch: arm64
       env:
-        - MB_ML_VER=2014
         - CIBW_BUILD=3.9
 
 before_install:
