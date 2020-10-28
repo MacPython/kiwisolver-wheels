@@ -55,7 +55,8 @@ jobs:
           python-version: '3.8'
       - name: Anaconda upload
         run: |
-          if [ "${{ github.ref }}" != "refs/heads/master" ] ; then
+          echo ${{ github.ref }}
+          if [ ${{ github.ref }} != "refs/heads/master" ] ; then
             ANACONDA_ORG="multibuild-wheels-staging";
             TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
           fi
