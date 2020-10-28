@@ -4,11 +4,9 @@ env:
       # branches. To build a tag prefix the tag value by tags/
       - BUILD_COMMIT=tags/1.3.0
       - DAILY_COMMIT=master
-      - REPO_DIR=kiwi
-      - PLAT=x86_64
-      - UNICODE_WIDTH=32
       - CIBW_TEST_REQUIRES=pytest
       - CIBW_TEST_COMMAND="python -m pytest {package}/tests -v"
+      - CIBW_BUILD_VERBOSITY=3
 
 language: python
 # Default Python version is usually 2.7
