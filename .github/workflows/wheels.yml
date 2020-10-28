@@ -6,6 +6,8 @@ jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }} for Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
+    env:
+      BUILD_COMMIT: 1.3.0
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -14,12 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Update repo
-        env:
-          BUILD_COMMIT: 1.3.0
         run: |
           git submodule update --init
           cd kiwi
-          git checkout $BUILD_COMMIT
+          git checkout ${{ env.BUILD_COMMIT }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
