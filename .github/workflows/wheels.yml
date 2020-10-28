@@ -54,13 +54,9 @@ jobs:
         with:
           python-version: '3.8'
       - name: Anaconda upload
+        if: contains( github.ref, 'master')
         run: |
-          echo ${{ github.ref }}
-          if [ ${{ github.ref }} != "refs/heads/master" ] ; then
-            ANACONDA_ORG="multibuild-wheels-staging";
-            TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
-          fi
-          pip install git+https://github.com/Anaconda-Server/anaconda-client;
-          if [ -n "${TOKEN}" ] ; then
-            anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
-          fi
+          ANACONDA_ORG="multibuild-wheels-staging"
+          TOKEN=${KIWI_STAGING_UPLOAD_TOKEN}
+          pip install git+https://github.com/Anaconda-Server/anaconda-client
+          anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl
