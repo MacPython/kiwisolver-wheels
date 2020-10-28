@@ -55,8 +55,9 @@ jobs:
           python-version: '3.8'
       - name: Anaconda upload
         if: "!contains( github.ref, 'master')"
+        env:
+          ANACONDA_ORG: multibuild-wheels-staging
         run: |
-          ANACONDA_ORG=multibuild-wheels-staging
           python -m pip install pip --upgrade
           pip install git+https://github.com/Anaconda-Server/anaconda-client
           anaconda -t ${KIWI_STAGING_UPLOAD_TOKEN} upload --force -u ${ANACONDA_ORG} dist/*.whl
