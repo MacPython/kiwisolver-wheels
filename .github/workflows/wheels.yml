@@ -60,4 +60,4 @@ jobs:
         run: |
           python -m pip install pip --upgrade
           pip install git+https://github.com/Anaconda-Server/anaconda-client
-          anaconda --token ${{ KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
+          anaconda --token ${{ secrets.KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
