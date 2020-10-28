@@ -8,7 +8,7 @@ env:
       - PLAT=x86_64
       - UNICODE_WIDTH=32
       - CIBW_TEST_REQUIRES=pytest
-      - CIBW_TEST_COMMAND=python -m pytest {package}/tests -v
+      - CIBW_TEST_COMMAND="python -m pytest {package}/tests -v"
 
 language: python
 # Default Python version is usually 2.7
@@ -20,19 +20,19 @@ jobs:
     - os: linux
       arch: arm64
       env:
-        - CIBW_BUILD=3.6
+        - CIBW_BUILD=cp3.6-*
     - os: linux
       arch: arm64
       env:
-        - CIBW_BUILD=3.7
+        - CIBW_BUILD=cp3.7-*
     - os: linux
       arch: arm64
       env:
-        - CIBW_BUILD=3.8
+        - CIBW_BUILD=cp3.8-*
     - os: linux
       arch: arm64
       env:
-        - CIBW_BUILD=3.9
+        - CIBW_BUILD=cp3.9-*
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -58,7 +58,7 @@ after_success:
           TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
       fi
     - pip install git+https://github.com/Anaconda-Server/anaconda-client;
-    - which python
+    - ls ~/dist
     - if [ -n "${TOKEN}" ] ; then
         anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ~/dist/*.whl;
       fi
