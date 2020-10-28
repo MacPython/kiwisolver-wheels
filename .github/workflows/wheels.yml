@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python: [36, 37, 38, 39]
     steps:
       - name: Checkout
@@ -54,12 +54,10 @@ jobs:
         with:
           python-version: '3.8'
       - name: Anaconda upload
+        if: "!contains( github.ref, 'master')"
+        env:
+          ANACONDA_ORG: multibuild-wheels-staging
         run: |
-          if [ "${{ github.ref }}" != "refs/heads/master" ] ; then
-            ANACONDA_ORG="multibuild-wheels-staging";
-            TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
-          fi
-          pip install git+https://github.com/Anaconda-Server/anaconda-client;
-          if [ -n "${TOKEN}" ] ; then
-            anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
-          fi
+          python -m pip install pip --upgrade
+          pip install git+https://github.com/Anaconda-Server/anaconda-client
+          anaconda --token ${{ secrets.KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
