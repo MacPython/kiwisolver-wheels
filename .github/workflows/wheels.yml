@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python: [36, 37, 38, 39]
+        python: [cp36, cp37, cp38, cp39, pp36]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -30,7 +30,7 @@ jobs:
           python -m pip install wheel cibuildwheel
       - name: Build wheels
         env:
-          CIBW_BUILD: cp${{ matrix.python }}-*
+          CIBW_BUILD: ${{ matrix.python }}-*
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: python -m pytest {package}/py/tests -v
         run: |
