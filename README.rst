@@ -8,9 +8,6 @@ the travis-ci OSX machines and the travis-ci Linux machines.
 The travis-ci interface for the builds is
 https://travis-ci.org/MacPython/kiwisolver-wheels
 
-Appveyor interface at
-https://ci.appveyor.com/project/matthew-brett/kiwisolver-wheels
-
 The driving github repository is
 https://github.com/MacPython/kiwisolver-wheels
 
