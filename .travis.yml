@@ -48,6 +48,44 @@ jobs:
         - MB_PYTHON_VERSION=3.9
         - DEBUG_PRINT=1
         - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
+    - os: linux
+      arch: ppc64le
+      python: 3.6
+      env:
+        - PLAT=ppc64le
+        - MB_ML_VER=2014
+        - MB_PYTHON_VERSION=3.6
+        - DEBUG_PRINT=1
+        - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
+    - os: linux
+      arch: ppc64le
+      python: 3.7
+      env:
+        - PLAT=ppc64le
+        - MB_ML_VER=2014
+        - MB_PYTHON_VERSION=3.7
+        - DEBUG_PRINT=1
+        - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
+    - os: linux
+      arch: ppc64le
+      python: 3.8
+      arch: ppc64le
+      env:
+        - PLAT=ppc64le
+        - MB_ML_VER=2014
+        - MB_PYTHON_VERSION=3.8
+        - DEBUG_PRINT=1
+        - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
+    - os: linux
+      arch: ppc64le
+      python: 3.9
+      arch: ppc64le
+      env:
+        - PLAT=ppc64le
+        - MB_ML_VER=2014
+        - MB_PYTHON_VERSION=3.9
+        - DEBUG_PRINT=1
+        - DOCKER_TEST_IMAGE=multibuild/xenial_{PLAT}
 
 before_install:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
@@ -69,17 +107,17 @@ install:
 script:
     - install_run $PLAT
 
-after_success:
-    # The tokens are set from
-    # https://anaconda.org/multibuild-wheels-staging/settings/
-    - if [ "$TRAVIS_BRANCH" != "master" ] ; then
-          ANACONDA_ORG="multibuild-wheels-staging";
-          TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
-      fi
-    - which pip
-    - which python
-    - pip install git+https://github.com/Anaconda-Server/anaconda-client;
-    - python -V
-    - if [ -n "${TOKEN}" ] ; then
-        anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
-      fi
+# after_success:
+#     # The tokens are set from
+#     # https://anaconda.org/multibuild-wheels-staging/settings/
+#     - if [ "$TRAVIS_BRANCH" != "master" ] ; then
+#           ANACONDA_ORG="multibuild-wheels-staging";
+#           TOKEN=${KIWI_STAGING_UPLOAD_TOKEN};
+#       fi
+#     - which pip
+#     - which python
+#     - pip install git+https://github.com/Anaconda-Server/anaconda-client;
+#     - python -V
+#     - if [ -n "${TOKEN}" ] ; then
+#         anaconda -t ${TOKEN} upload --force -u ${ANACONDA_ORG} ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl;
+#       fi

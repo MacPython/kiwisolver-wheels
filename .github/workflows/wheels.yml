@@ -53,11 +53,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-      - name: Anaconda upload
-        if: "!contains( github.ref, 'master')"
-        env:
-          ANACONDA_ORG: multibuild-wheels-staging
-        run: |
-          python -m pip install pip --upgrade
-          pip install git+https://github.com/Anaconda-Server/anaconda-client
-          anaconda --token ${{ secrets.KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
+      # - name: Anaconda upload
+      #   if: "!contains( github.ref, 'master')"
+      #   env:
+      #     ANACONDA_ORG: multibuild-wheels-staging
+      #   run: |
+      #     python -m pip install pip --upgrade
+      #     pip install git+https://github.com/Anaconda-Server/anaconda-client
+      #     anaconda --token ${{ secrets.KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
