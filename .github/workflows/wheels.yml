@@ -1,5 +1,9 @@
 name: Build and upload wheels
-on: [push, pull_request]
+on:
+  schedule:
+    - cron: '0 0 * * 3'
+  push:
+  pull_request:
 
 jobs:
 

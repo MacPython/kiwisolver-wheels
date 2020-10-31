@@ -3,13 +3,10 @@ Building and uploading kiwisolver wheels
 ########################################
 
 We automate wheel building using this custom github repository that builds on
-the travis-ci OSX machines and the travis-ci Linux machines.
+the travis-ci machines and Github actions.
 
 The travis-ci interface for the builds is
 https://travis-ci.org/MacPython/kiwisolver-wheels
-
-Appveyor interface at
-https://ci.appveyor.com/project/matthew-brett/kiwisolver-wheels
 
 The driving github repository is
 https://github.com/MacPython/kiwisolver-wheels
@@ -22,19 +19,13 @@ The repository contains the branches:
 * ``master`` - for development and daily builds;
 * ``vx.y.z`` - for building releases.
 
-Travis-CI and Appveyor builds the ``master`` regularly (daily/weekly),
+Travis-CI and Github actions builds the ``master`` regularly (daily/weekly),
 via `Travis-CI cron jobs
-<https://docs.travis-ci.com/user/cron-jobs/>`_ and `Appveyor scheduled
-builds
-<https://www.appveyor.com/docs/build-configuration/#scheduled-builds>`.
+<https://docs.travis-ci.com/user/cron-jobs/>`_ and Github actions schedule.
 
-Builds from the ``master`` branch upload to a Rackspace container for
-pre-releases at
-https://7933911d6844c6c53a7d-47bd50c35cd79bd838daf386af554a83.ssl.cf2.rackcdn.com
+Builds from the ``master`` branch are not uploaded but can be accessed as artifact
 
-Builds from the release branches upload to a Rackspace container for releases
-at
-https://3f23b170c54c2533c070-1c8a9b3114517dc5fe17b7c3f8c63a43.ssl.cf2.rackcdn.com
+Builds from the release branches upload to Anaconda Cloud.
 
 Pull requests should usually be submitted to the ``master`` branch.
 
