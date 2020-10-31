@@ -33,6 +33,9 @@ jobs:
           CIBW_BUILD: ${{ matrix.python }}-*
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: python -m pytest {package}/py/tests -v
+          # Move to 2010 or 2014 for the next release (or when matplotlib does)
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux1
+          CIBW_MANYLINUX_I686_IMAGE: manylinux1
         run: |
           python -m cibuildwheel kiwi --output-dir dist
       - name: Store artifacts
