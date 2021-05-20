@@ -68,7 +68,6 @@ jobs:
     - os: linux
       arch: ppc64le
       python: 3.8
-      arch: ppc64le
       env:
         - PLAT=ppc64le
         - MB_ML_VER=2014
@@ -78,7 +77,6 @@ jobs:
     - os: linux
       arch: ppc64le
       python: 3.9
-      arch: ppc64le
       env:
         - PLAT=ppc64le
         - MB_ML_VER=2014
