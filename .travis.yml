@@ -113,6 +113,7 @@ after_success:
       fi
     - which pip
     - which python
+    pip install git+https://github.com/Anaconda-Platform/anaconda-project;
     - pip install git+https://github.com/Anaconda-Server/anaconda-client;
     - python -V
     - if [ -n "${TOKEN}" ] ; then
