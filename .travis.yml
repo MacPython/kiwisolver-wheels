@@ -1,9 +1,8 @@
 env:
   global:
-      # Daily commit is used on master branch and build commit on named
-      # branches
+      # Daily commit is used on main branch and build commit on named branches.
       - BUILD_COMMIT=1.3.0
-      - DAILY_COMMIT=master
+      - DAILY_COMMIT=main
       - REPO_DIR=kiwi
       - PLAT=x86_64
       - UNICODE_WIDTH=32
