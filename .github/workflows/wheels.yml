@@ -64,7 +64,7 @@ jobs:
         with:
           python-version: '3.8'
       - name: Anaconda upload
-        if: "!contains( github.ref, 'master')"
+        if: "contains( github.ref, 'master')"
         env:
           ANACONDA_ORG: multibuild-wheels-staging
         run: |
