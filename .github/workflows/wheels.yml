@@ -11,7 +11,7 @@ jobs:
     name: Build wheels on ${{ matrix.os }} for Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
     env:
-      BUILD_COMMIT: master
+      BUILD_COMMIT: main
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -35,6 +35,7 @@ jobs:
       - name: Build wheels
         env:
           CIBW_BUILD: ${{ matrix.python }}-*
+          CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: python -m pytest {package}/py/tests -v
           # Move to 2010 or 2014 for the next release (or when matplotlib does)
@@ -63,10 +64,12 @@ jobs:
         with:
           python-version: '3.8'
       - name: Anaconda upload
-        if: "!contains( github.ref, 'master')"
+        if: "contains( github.ref, 'master')"
         env:
           ANACONDA_ORG: multibuild-wheels-staging
         run: |
           python -m pip install pip --upgrade
+          python -m pip install wheel
+          pip install git+https://github.com/Anaconda-Platform/anaconda-project
           pip install git+https://github.com/Anaconda-Server/anaconda-client
           anaconda --token ${{ secrets.KIWI_STAGING_UPLOAD_TOKEN }} upload --force -u ${ANACONDA_ORG} dist/*.whl
